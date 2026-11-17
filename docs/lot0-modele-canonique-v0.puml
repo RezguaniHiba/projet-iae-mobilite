@@ -1,0 +1,59 @@
+@startuml
+title Lot 0 - Modèle canonique v0
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+enum ModeTransport{
+    TRAIN
+    FLIGHT
+}
+
+enum ReservationStatus {
+    HELD
+    CONFIRMED
+    CANCELLED
+    EXPIRED
+    FAILED
+}
+
+
+class Offre {
+    - offreId : String
+    - refFournisseur : String
+    - mode : ModeTransport
+    - origine : String
+    - destination : String
+    - depart : String
+    - arrivee : String
+    - prixMinor : Long
+    - devise : String = "MAD"
+    - placesDisponibles : Integer
+}
+
+class Reservation {
+    - reservationId : String
+    - nombrePlaces : Integer
+    - statut : ReservationStatus 
+    - holdId : String
+    - bookingRef : String
+    - creeLe : String
+    - expireLe : String
+}
+
+Reservation "0..*" -- "1" Offre : concerne
+
+
+note right of Offre
+  refFournisseur = tripId (CORBA) ou flightId (SOAP)
+  prixMinor en centimes de MAD
+  dates ISO-8601 (sans fuseau)
+end note
+
+note right of Reservation
+  holdId : renvoyé par hold()
+  bookingRef : renvoyé par confirm()
+  null tant que l'étape n'est pas atteinte
+  expireLe = creeLe + 10 min
+end note
+@enduml

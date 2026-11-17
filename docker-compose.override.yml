@@ -1,0 +1,4 @@
+services:
+  rail:
+    environment:
+      CORBA_ADVERTISED_HOST: localhost
